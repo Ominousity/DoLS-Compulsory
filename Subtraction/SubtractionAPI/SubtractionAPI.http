@@ -1,0 +1,6 @@
+@SubtractionAPI_HostAddress = http://localhost:5019
+
+GET {{SubtractionAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
