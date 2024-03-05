@@ -31,4 +31,19 @@ public class CalculatorGateway : ControllerBase
         }
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(List<Calculation>), 200)]
+    [ProducesResponseType(400)]
+    public ActionResult<List<Calculation>> GetCalculations(int id)
+    {
+        try
+        {
+            return Ok(calcService.GetCalculations(id));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
 }
