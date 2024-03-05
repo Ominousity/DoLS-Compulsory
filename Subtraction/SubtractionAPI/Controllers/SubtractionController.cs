@@ -7,10 +7,9 @@ namespace SubtractionAPI;
 public class SubtractionController : ControllerBase
 {
     [HttpPost]
-    [Route("api/subtraction/{a}/{b}")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
-    public ActionResult<Calculation> Get(Calculation calc)
+    public ActionResult<Calculation> Subtraction(Calculation calc)
     {
 
         try
