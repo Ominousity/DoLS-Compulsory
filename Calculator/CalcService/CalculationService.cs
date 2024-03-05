@@ -14,7 +14,9 @@ public class CalculationService : ICalculationService
     }
 
     public Calculation DoCalculation(Calculation calc)
-    {
+    {   
+        SaveCalculation(calc);
+
         return calcRepo.DoCalculation(calc);
     }
 
@@ -23,7 +25,7 @@ public class CalculationService : ICalculationService
         return calcRepo.GetCalculations(id);
     }
 
-    public void SaveCalculation(Calculation calc)
+    private void SaveCalculation(Calculation calc)
     {
         calcRepo.SaveCalculation(calc);
     }

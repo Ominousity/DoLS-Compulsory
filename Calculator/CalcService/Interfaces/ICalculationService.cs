@@ -15,10 +15,4 @@ public interface ICalculationService
     /// <param name="id">The ID of the calculations to retrieve.</param>
     /// <returns>A list of calculations.</returns>
     List<Calculation> GetCalculations(int id);
-
-    /// <summary>
-    /// Saves a calculation.
-    /// </summary>
-    /// <param name="calc">The calculation to be saved.</param>
-    void SaveCalculation(Calculation calc);
 }
