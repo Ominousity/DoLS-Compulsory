@@ -25,6 +25,7 @@ namespace MemoryAPI.Controllers
                 return Ok(calculations);
             } catch (Exception ex)
             {
+                _logger.LogError(ex, "Error while getting calculations");
                 return BadRequest(ex.Message);
             }
         }
@@ -39,6 +40,7 @@ namespace MemoryAPI.Controllers
                 return Ok();
             } catch (Exception ex) 
             {
+                _logger.LogError(ex, "Error while saving calculation");
                 return BadRequest(ex.Message);
             }
         }

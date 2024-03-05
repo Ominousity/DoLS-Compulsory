@@ -8,11 +8,12 @@ namespace CalculatorAPI;
 public class CalculatorGateway : ControllerBase
 {
     private readonly ICalculationService calcService;
+    private readonly ILogger<CalculatorGateway> logger;
 
-
-    public CalculatorGateway(ICalculationService _calcService)
+    public CalculatorGateway(ICalculationService _calcService, ILogger<CalculatorGateway> logger)
     {
         calcService = _calcService;
+        this.logger = logger;
     }
 
     [HttpPost]
@@ -23,10 +24,12 @@ public class CalculatorGateway : ControllerBase
     {
         try
         {
+            logger.LogInformation($"Calculation requested {calc.Operation.ToString()}");
             return Ok(calcService.DoCalculation(calc));
         }
         catch (Exception e)
         {
+            logger.LogError(e.Message);
             return BadRequest(e.Message);
         }
     }
@@ -38,10 +41,12 @@ public class CalculatorGateway : ControllerBase
     {
         try
         {
+            logger.LogInformation($"Calculations requested for {id}");
             return Ok(calcService.GetCalculations(id));
         }
         catch (Exception e)
         {
+            logger.LogError(e.Message);
             return BadRequest(e.Message);
         }
     }

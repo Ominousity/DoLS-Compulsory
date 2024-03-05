@@ -6,41 +6,27 @@ namespace SubtractionAPI;
 [ApiController]
 public class SubtractionController : ControllerBase
 {
+    private readonly ILogger<SubtractionController> _logger;
+    public SubtractionController(ILogger<SubtractionController> logger)
+    {
+        _logger = logger;
+    }
+
+
     [HttpPost]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
-    public ActionResult<Calculation> Subtraction(Calculation calc)
+    public IActionResult Subtraction(float a, float b)
     {
-
         try
         {
-
-            return Ok(Subtract(calc));
+            _logger.LogInformation($"Request for subtracting these 2 numbers : Number A = {a} Number B = {b}");
+            return Ok(a-b);
         }
         catch (Exception e)
         {
-
+            _logger.LogError(e, "Error while subtracting numbers");
             return BadRequest(e.Message);
         }
-    }
-
-    private Calculation Subtract(Calculation calc)
-    {
-
-        foreach (var number in calc.Numbers)
-        {
-
-            if (calc.Result == null)
-            {
-                calc.Result = number;
-                continue;
-            }
-
-            calc.Result -= number;
-
-        }
-
-        calc.DateStamp = DateTime.Now;
-        return calc;
     }
 }
