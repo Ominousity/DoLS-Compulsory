@@ -1,26 +1,19 @@
-using CalcApplication;
-using CalcInfrastruture;
-using CalcService;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddLogging(logBuilder =>
-{
-    logBuilder.AddSeq("http://seq:5341");
-});
-
-builder.Services.AddScoped<ICalculationService, CalculationService>();
-builder.Services.AddScoped<ICalculationRepository, CalculationRepository>();
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
 var app = builder.Build();
+
+builder.Services.AddLogging(logbuilder =>
+{
+    logbuilder.AddConsole();
+    logbuilder.AddSeq("http://seq:1443");
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
