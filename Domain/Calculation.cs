@@ -5,9 +5,13 @@
 /// </summary>
 public class Calculation
 {
+
+    public Guid UserId { get; set; }
+
     /// <summary>
     /// Gets or sets the list of numbers used in the calculation.
     /// </summary>
+
     public List<float>? Numbers { get; set; }
 
     /// <summary>
