@@ -45,7 +45,7 @@ services:
   division:
     build:
       context: .
-      dockerfile: DivisionAPI/Dockerfile
+      dockerfile: Division-API/Dockerfile
     ports:
       - "8087:8080"
       - "8088:8081"

@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MutiplecationAPI/MutiplecationAPI.csproj", "MutiplecationAPI/"]
-RUN dotnet restore "./MutiplecationAPI/MutiplecationAPI.csproj"
+COPY ["MultiplicationAPI/MultiplicationAPI.csproj", "MultiplicationAPI/"]
+RUN dotnet restore "./MultiplicationAPI/MultiplicationAPI.csproj"
 COPY . .
-WORKDIR "/src/MutiplecationAPI"
-RUN dotnet build "./MutiplecationAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/MultiplicationAPI"
+RUN dotnet build "./MultiplicationAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./MutiplecationAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./MultiplicationAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MutiplecationAPI.dll"]
+ENTRYPOINT ["dotnet", "MultiplicationAPI.dll"]
