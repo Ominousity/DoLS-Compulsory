@@ -1,3 +1,7 @@
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,10 +9,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddLogging(logBuilder =>
-{
-    logBuilder.AddSeq("http://seq:5341");
-});
+builder.Services.AddOpenTelemetry().WithTracing(builder => builder
+    .AddAspNetCoreInstrumentation()
+    .AddSource("Subtraction-API")
+    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Subtraction-API"))
+    .AddZipkinExporter()
+    .Build());
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(dispose: true);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentUserName()
+    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Console()
+    .CreateLogger();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +43,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

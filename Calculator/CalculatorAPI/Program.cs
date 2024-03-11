@@ -1,6 +1,9 @@
 using CalcApplication;
 using CalcInfrastruture;
 using CalcService;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +12,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddLogging(logBuilder =>
-{
-    logBuilder.AddSeq("http://seq:5341");
-});
+builder.Services.AddOpenTelemetry().WithTracing(builder => builder
+    .AddAspNetCoreInstrumentation()
+    .AddSource("Calculator-API")
+    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Calculator-API"))
+    .AddZipkinExporter()
+    .Build());
+
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(dispose: true);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentUserName()
+    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Console()
+    .CreateLogger();
 
 builder.Services.AddScoped<ICalculationService, CalculationService>();
 builder.Services.AddScoped<ICalculationRepository, CalculationRepository>();
@@ -32,6 +50,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

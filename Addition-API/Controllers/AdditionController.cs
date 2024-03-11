@@ -1,19 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Addition_API.Controllers
 {
     [ApiController]
     public class AdditionController : ControllerBase
     {   
-        private readonly ILogger<AdditionController> _logger;
-        public AdditionController(ILogger<AdditionController> logger) { 
-            _logger = logger;
-        }
         [HttpGet]
         public IActionResult Addition(float a, float b)
         {
-            _logger.LogInformation($"request for addition for : A = {a} & B = {b}");
-            return Ok(a + b);
+            var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Addition-API");
+            using (var span = tracer.StartActiveSpan("Addition"))
+            {
+                span.SetAttribute("Number A", a);
+                span.SetAttribute("Number B", b);
+                Log.Logger.Information($"Request for adding these 2 numbers : Number A = {a} Number B = {b}");
+                return Ok(a + b);
+            }
         }
     }
 }

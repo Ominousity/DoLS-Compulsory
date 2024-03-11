@@ -3,17 +3,12 @@ using System.Net.Http.Json;
 using CalcApplication;
 using Domain;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CalcInfrastruture;
 
 public class CalculationRepository : ICalculationRepository
 {
-    private readonly ILogger<CalculationRepository> _logger;
-
-    public CalculationRepository(ILogger<CalculationRepository> logger)
-    {
-        _logger = logger;
-    }
     public Calculation DoCalculation(Calculation calc)
     {
         using (HttpClient client = new HttpClient())
@@ -21,7 +16,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _logger.LogInformation("Sending calculation to server");
+            Log.Logger.Information("Sending calculation to server");
             HttpResponseMessage response = client.PostAsJsonAsync(calc.Operation.ToString(), calc).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -41,7 +36,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _logger.LogInformation("Getting calculations from server");
+            Log.Logger.Information("Getting calculations from server");
             HttpResponseMessage response = client.GetAsync("getCalculations/" + id).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -61,7 +56,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _logger.LogInformation("Saving calculation to server");
+            Log.Logger.Information("Saving calculation to server");
             HttpResponseMessage response = client.PostAsJsonAsync("saveCalculation", calc).Result;
             if (!response.IsSuccessStatusCode)
             {
