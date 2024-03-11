@@ -27,7 +27,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithMachineName()
     .Enrich.WithEnvironmentUserName()
-    .WriteTo.Seq("http://localhost:5341")
+    .WriteTo.Seq("http://seq:5341")
     .WriteTo.Console()
     .CreateLogger();
 
