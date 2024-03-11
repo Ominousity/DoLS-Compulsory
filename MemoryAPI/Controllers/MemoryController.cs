@@ -15,6 +15,7 @@ namespace MemoryAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetCalculations")]
         public IActionResult GetCalculations(Guid UserId)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
@@ -36,6 +37,7 @@ namespace MemoryAPI.Controllers
         }
 
         [HttpPost]
+        [Route("SaveCalculation")]
         public IActionResult SaveCalculation(Calculation calculation)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
@@ -51,6 +53,27 @@ namespace MemoryAPI.Controllers
                 catch (Exception ex)
                 {
                     Log.Logger.Error(ex, "Error while saving calculation");
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpPost]
+        [Route("Rebuild")]
+        public IActionResult Rebuild()
+        {
+            var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
+            using (var span = tracer.StartActiveSpan("Rebuild"))
+            {
+                try
+                {
+                    Log.Logger.Information($"Requst for rebuilding the database");
+                    _memoryRepository.Rebuild();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Error(ex, "Error while rebuilding the database");
                     return BadRequest(ex.Message);
                 }
             }

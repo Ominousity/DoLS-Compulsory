@@ -79,7 +79,7 @@ services:
       dockerfile: MemoryAPI/Dockerfile
     ports:
       - "8089:8080"
-      - "80890:8081"
+      - "8090:8081"
     depends_on:
       - seq
       - db
@@ -101,3 +101,5 @@ services:
       - memory
     restart: unless-stopped
 
+volumes:
+  mssql-data:
