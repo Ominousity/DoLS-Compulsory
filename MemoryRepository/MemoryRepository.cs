@@ -15,7 +15,7 @@ namespace MemoryRepository
         private DbContextOptions<DBCONTEXT> _options;
         public MemoryRepository()
         {
-            _options = new DbContextOptionsBuilder<DBCONTEXT>().UseSqlServer("").Options;
+            _options = new DbContextOptionsBuilder<DBCONTEXT>().UseSqlServer("Server=Auth-db;Database=Auth;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;").Options;
         }
         public List<Calculation> GetCalculations(Guid UserId)
         {
@@ -33,6 +33,15 @@ namespace MemoryRepository
             {
                 _ = context.Add(calculation);
                 context.SaveChanges();
+            }
+        }
+
+        public void Rebuild()
+        {
+            using (var context = new DBCONTEXT(_options, Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
             }
         }
     }

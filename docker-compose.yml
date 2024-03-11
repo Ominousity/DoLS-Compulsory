@@ -12,6 +12,12 @@ services:
       ACCEPT_EULA: "Y"
     restart: unless-stopped
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    restart: unless-stopped
+
   db:
     image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
@@ -21,6 +27,7 @@ services:
       - "1433:1433"
     volumes:
       - mssql-data:/var/opt/mssql
+    restart: unless-stopped
 
   addition:
     build:
@@ -31,6 +38,7 @@ services:
       - "8082:8081"
     depends_on:
       - seq
+    restart: unless-stopped
 
   subtraction:
     build:
@@ -41,6 +49,7 @@ services:
       - "8084:8081"
     depends_on:
       - seq
+    restart: unless-stopped
 
   multiplication:
     build:
@@ -51,6 +60,7 @@ services:
       - "8086:8081"
     depends_on:
       - seq
+    restart: unless-stopped
 
   division:
     build:
@@ -61,6 +71,7 @@ services:
       - "8088:8081"
     depends_on:
       - seq
+    restart: unless-stopped
 
   memory:
     build:
@@ -68,9 +79,11 @@ services:
       dockerfile: MemoryAPI/Dockerfile
     ports:
       - "8089:8080"
-      - "80890:8081"
+      - "8090:8081"
     depends_on:
       - seq
+      - db
+    restart: unless-stopped
 
   calculatorgateway:
     build:
@@ -86,4 +99,7 @@ services:
       - multiplication
       - division
       - memory
+    restart: unless-stopped
 
+volumes:
+  mssql-data:

@@ -11,5 +11,6 @@ namespace MemoryRepository
     {
         public List<Calculation> GetCalculations(Guid UserId);
         public void SaveCalculation(Calculation calculation);
+        public void Rebuild();
     }
 }
