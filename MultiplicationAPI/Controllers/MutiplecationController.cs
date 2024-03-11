@@ -1,22 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace MutiplecationAPI.Controllers
 {
     [ApiController]
     public class MutiplecationController : ControllerBase
     {
-        private readonly ILogger<MutiplecationController> _logger;
-        public MutiplecationController(ILogger<MutiplecationController> logger)
-        {
-            _logger = logger;
-        }
-
         [HttpGet]
         [Route("doMultiplication")]
         public IActionResult Mutiply(float a, float b)
         {
-            _logger.LogInformation($"Request for multiplying these 2 numbers : Number A = {a} Number B = {b}");
-            return Ok(a * b);
+            var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Multiplication-API");
+            using (var span = tracer.StartActiveSpan("Multiplication"))
+            {
+                span.SetAttribute("Number A", a);
+                span.SetAttribute("Number B", b);
+                Log.Logger.Information($"Request for multiplying these 2 numbers : Number A = {a} Number B = {b}");
+                return Ok(a * b);
+            }
         }
     }
 }

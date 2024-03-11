@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain;
 using CalcApplication;
+using Serilog;
 
 namespace CalculatorAPI;
 
@@ -8,7 +9,6 @@ namespace CalculatorAPI;
 public class CalculatorGateway : ControllerBase
 {
     private readonly ICalculationService calcService;
-
 
     public CalculatorGateway(ICalculationService _calcService)
     {
@@ -21,13 +21,20 @@ public class CalculatorGateway : ControllerBase
     [ProducesResponseType(400)]
     public ActionResult<Calculation> Get(Calculation calc)
     {
-        try
+        var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Calculator-API");
+        using (var span = tracer.StartActiveSpan("DoCalculation"))
         {
-            return Ok(calcService.DoCalculation(calc));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
+            span.SetAttribute("Operation", calc.Operation.ToString());
+            try
+            {
+                Log.Logger.Information($"Calculation requested {calc.Operation.ToString()}");
+                return Ok(calcService.DoCalculation(calc));
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e.Message);
+                return BadRequest(e.Message);
+            }
         }
     }
 
@@ -37,13 +44,20 @@ public class CalculatorGateway : ControllerBase
     [ProducesResponseType(400)]
     public ActionResult<List<Calculation>> GetCalculations(int id)
     {
-        try
+        var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Calculator-API");
+        using (var span = tracer.StartActiveSpan("GetCalculations"))
         {
-            return Ok(calcService.GetCalculations(id));
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
+            span.SetAttribute("ID", id);
+            try
+            {
+                Log.Logger.Information($"Calculations requested for {id}");
+                return Ok(calcService.GetCalculations(id));
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e.Message);
+                return BadRequest(e.Message);
+            }
         }
     }
 

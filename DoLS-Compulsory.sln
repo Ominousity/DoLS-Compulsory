@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Multiplication", "Multiplic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{69431B94-B02E-4FCE-9702-0BEED7377D86}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addition", "Addition", "{35599D7C-E0A5-487D-9CF0-0A43A9468C73}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Division", "Division", "{265E026A-23E0-44BE-81CA-79B01A69A181}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Division-API", "Division-API\Division-API.csproj", "{C8294328-AA31-4DF4-8971-BF8DF868F655}"
@@ -32,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalcInfrastruture", "Calculator\CalcInfrastruture\CalcInfrastruture.csproj", "{F5319904-93DB-4BC4-9128-998112159102}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiplicationAPI", "MultiplicationAPI\MultiplicationAPI.csproj", "{E2C0594C-6A24-4CFF-B489-4F8A78B98A1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryRepository", "MemoryRepository\MemoryRepository.csproj", "{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +75,10 @@ Global
 		{E2C0594C-6A24-4CFF-B489-4F8A78B98A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2C0594C-6A24-4CFF-B489-4F8A78B98A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2C0594C-6A24-4CFF-B489-4F8A78B98A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +91,9 @@ Global
 		{E84F3298-84E5-4F70-8EF3-A62C31118B83} = {9CF361E3-529B-4836-B464-CA739B883177}
 		{F5319904-93DB-4BC4-9128-998112159102} = {9CF361E3-529B-4836-B464-CA739B883177}
 		{E2C0594C-6A24-4CFF-B489-4F8A78B98A1B} = {6FD002FC-74E8-48DC-95E7-CE4AD89D90F8}
+		{B6E23255-E4E8-4BD2-BEA1-49587A4EC58B} = {6A3DFE0C-94BA-49F8-975B-1276D970B054}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B6A1686-52AE-48E6-AE5D-840CE61E9894}
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace SubtractionAPI;
 
@@ -10,38 +11,23 @@ public class SubtractionController : ControllerBase
     [Route("doSubtraction")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
-    public ActionResult<Calculation> Subtraction(Calculation calc)
+    public IActionResult Subtraction(float a, float b)
     {
-
-        try
+        var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Subtraction-API");
+        using (var span = tracer.StartActiveSpan("Subtraction"))
         {
-
-            return Ok(Subtract(calc));
-        }
-        catch (Exception e)
-        {
-
-            return BadRequest(e.Message);
-        }
-    }
-
-    private Calculation Subtract(Calculation calc)
-    {
-
-        foreach (var number in calc.Numbers)
-        {
-
-            if (calc.Result == null)
+            span.SetAttribute("Number A", a);
+            span.SetAttribute("Number B", b);
+            try
             {
-                calc.Result = number;
-                continue;
+                Log.Logger.Information($"Request for subtracting these 2 numbers : Number A = {a} Number B = {b}");
+                return Ok(a - b);
             }
-
-            calc.Result -= number;
-
+            catch (Exception e)
+            {
+                Log.Logger.Error(e, "Error while subtracting numbers");
+                return BadRequest(e.Message);
+            }
         }
-
-        calc.DateStamp = DateTime.Now;
-        return calc;
     }
 }

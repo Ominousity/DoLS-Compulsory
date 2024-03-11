@@ -2,6 +2,8 @@
 using System.Net.Http.Json;
 using CalcApplication;
 using Domain;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CalcInfrastruture;
 
@@ -14,6 +16,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Log.Logger.Information("Sending calculation to server");
             HttpResponseMessage response = client.PostAsJsonAsync(calc.Operation.ToString(), calc).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -33,6 +36,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Log.Logger.Information("Getting calculations from server");
             HttpResponseMessage response = client.GetAsync("getCalculations/" + id).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -52,6 +56,7 @@ public class CalculationRepository : ICalculationRepository
             client.BaseAddress = new Uri("http://localhost:5000");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Log.Logger.Information("Saving calculation to server");
             HttpResponseMessage response = client.PostAsJsonAsync("saveCalculation", calc).Result;
             if (!response.IsSuccessStatusCode)
             {
