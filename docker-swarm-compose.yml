@@ -12,6 +12,16 @@ services:
       ACCEPT_EULA: "Y"
     restart: unless-stopped
 
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      MSSQL_SA_PASSWORD: "SuperSecret7!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
   addition:
     image: dols-compulsory-addition:latest
     ports:
@@ -44,10 +54,18 @@ services:
     deploy:
       replicas: 4
 
+  memory:
+    image: dols-compulsory-memory:latest
+    ports:
+      - "8089:8080"
+      - "80890:8081"
+    deploy:
+      replicas: 4
+
   calculatorgateway:
     image: dols-compulsory-calculatorgateway:latest
     ports:
-      - "8089:8080"
-      - "8090:8081"
+      - "8091:8080"
+      - "8092:8081"
     deploy:
       replicas: 4

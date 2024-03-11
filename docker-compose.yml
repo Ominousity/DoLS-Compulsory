@@ -12,6 +12,16 @@ services:
       ACCEPT_EULA: "Y"
     restart: unless-stopped
 
+  db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      MSSQL_SA_PASSWORD: "SuperSecret7!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
   addition:
     build:
       context: .
@@ -52,17 +62,28 @@ services:
     depends_on:
       - seq
 
+  memory:
+    build:
+      context: .
+      dockerfile: MemoryAPI/Dockerfile
+    ports:
+      - "8089:8080"
+      - "80890:8081"
+    depends_on:
+      - seq
+
   calculatorgateway:
     build:
       context: .
       dockerfile: Calculator/CalculatorAPI/Dockerfile
     ports:
-      - "8089:8080"
-      - "8090:8081"
+      - "8091:8080"
+      - "8092:8081"
     depends_on:
       - seq
       - addition
       - subtraction
       - multiplication
       - division
+      - memory
 
