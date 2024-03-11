@@ -7,6 +7,7 @@ namespace MutiplecationAPI.Controllers
     public class MutiplecationController : ControllerBase
     {
         [HttpGet]
+        [Route("doMultiplication")]
         public IActionResult Mutiply(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Multiplication-API");

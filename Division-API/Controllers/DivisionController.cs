@@ -7,6 +7,7 @@ namespace Division_API.Controllers
     public class DivisionController : ControllerBase
     {
         [HttpGet]
+        [Route("doDivision")]
         public IActionResult Division(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Division-API");

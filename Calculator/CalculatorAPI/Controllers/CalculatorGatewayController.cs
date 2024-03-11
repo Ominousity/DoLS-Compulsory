@@ -39,6 +39,7 @@ public class CalculatorGateway : ControllerBase
     }
 
     [HttpGet]
+    [Route("api/getCalculations")]
     [ProducesResponseType(typeof(List<Calculation>), 200)]
     [ProducesResponseType(400)]
     public ActionResult<List<Calculation>> GetCalculations(int id)

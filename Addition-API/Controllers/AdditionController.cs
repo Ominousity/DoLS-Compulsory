@@ -7,6 +7,7 @@ namespace Addition_API.Controllers
     public class AdditionController : ControllerBase
     {   
         [HttpGet]
+        [Route("doAddition")]
         public IActionResult Addition(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Addition-API");

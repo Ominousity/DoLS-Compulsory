@@ -23,67 +23,49 @@ services:
       - mssql-data:/var/opt/mssql
 
   addition:
-    build:
-      context: .
-      dockerfile: Addition-API/Dockerfile
+    image: dols-compulsory-addition:latest
     ports:
       - "8081:8080"
       - "8082:8081"
-    depends_on:
-      - seq
+    deploy:
+      replicas: 4
 
   subtraction:
-    build:
-      context: .
-      dockerfile: Subtraction/SubtractionAPI/Dockerfile
+    image: dols-compulsory-subtraction:latest
     ports:
       - "8083:8080"
       - "8084:8081"
-    depends_on:
-      - seq
+    deploy:
+      replicas: 4
 
   multiplication:
-    build:
-      context: .
-      dockerfile: MultiplicationAPI/Dockerfile
+    image: dols-compulsory-multiplication:latest
     ports:
       - "8085:8080"
       - "8086:8081"
-    depends_on:
-      - seq
+    deploy:
+      replicas: 4
 
   division:
-    build:
-      context: .
-      dockerfile: Division-API/Dockerfile
+    image: dols-compulsory-division:latest
     ports:
       - "8087:8080"
       - "8088:8081"
-    depends_on:
-      - seq
+    deploy:
+      replicas: 4
 
   memory:
-    build:
-      context: .
-      dockerfile: MemoryAPI/Dockerfile
+    image: dols-compulsory-memory:latest
     ports:
       - "8089:8080"
       - "80890:8081"
-    depends_on:
-      - seq
+    deploy:
+      replicas: 4
 
   calculatorgateway:
-    build:
-      context: .
-      dockerfile: Calculator/CalculatorAPI/Dockerfile
+    image: dols-compulsory-calculatorgateway:latest
     ports:
       - "8091:8080"
       - "8092:8081"
-    depends_on:
-      - seq
-      - addition
-      - subtraction
-      - multiplication
-      - division
-      - memory
-
+    deploy:
+      replicas: 4
