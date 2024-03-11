@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+      - /path/to/seq-data:/data
+    environment:
+      ACCEPT_EULA: "Y"
+    restart: unless-stopped
+
+  addition:
+    image: dols-compulsory-addition:latest
+    ports:
+      - "8081:8080"
+      - "8082:8081"
+    deploy:
+      replicas: 4
+
+  subtraction:
+    image: dols-compulsory-subtraction:latest
+    ports:
+      - "8083:8080"
+      - "8084:8081"
+    deploy:
+      replicas: 4
+
+  multiplication:
+    image: dols-compulsory-multiplication:latest
+    ports:
+      - "8085:8080"
+      - "8086:8081"
+    deploy:
+      replicas: 4
+
+  division:
+    image: dols-compulsory-division:latest
+    ports:
+      - "8087:8080"
+      - "8088:8081"
+    deploy:
+      replicas: 4
+
+  calculatorgateway:
+    image: dols-compulsory-calculatorgateway:latest
+    ports:
+      - "8089:8080"
+      - "8090:8081"
+    deploy:
+      replicas: 4

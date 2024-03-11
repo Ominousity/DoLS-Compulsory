@@ -7,6 +7,7 @@ namespace SubtractionAPI;
 public class SubtractionController : ControllerBase
 {
     [HttpPost]
+    [Route("doSubtraction")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
     public ActionResult<Calculation> Subtraction(Calculation calc)
