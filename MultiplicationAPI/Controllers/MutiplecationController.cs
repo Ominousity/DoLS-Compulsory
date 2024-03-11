@@ -12,6 +12,7 @@ namespace MutiplecationAPI.Controllers
         }
 
         [HttpGet]
+        [Route("doMultiplication")]
         public IActionResult Mutiply(float a, float b)
         {
             _logger.LogInformation($"Request for multiplying these 2 numbers : Number A = {a} Number B = {b}");

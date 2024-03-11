@@ -10,6 +10,7 @@ namespace Addition_API.Controllers
             _logger = logger;
         }
         [HttpGet]
+        [Route("doAddition")]
         public IActionResult Addition(float a, float b)
         {
             _logger.LogInformation($"request for addition for : A = {a} & B = {b}");

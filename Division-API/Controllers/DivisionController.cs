@@ -11,6 +11,7 @@ namespace Division_API.Controllers
             _logger = logger;
         }
         [HttpGet]
+        [Route("doDivision")]
         public IActionResult Division(float a, float b)
         {
             try
