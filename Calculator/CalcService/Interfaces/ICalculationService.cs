@@ -13,6 +13,6 @@ public interface ICalculationService
     /// Retrieves a list of calculations for a given ID.
     /// </summary>
     /// <param name="id">The ID of the calculations to retrieve.</param>
-    /// <returns>A list of calculations.</returns>
-    List<Calculation> GetCalculations(int id);
+    /// <returns>A list of calculations.</returns>d
+    List<Calculation> GetCalculations(Guid id);
 }

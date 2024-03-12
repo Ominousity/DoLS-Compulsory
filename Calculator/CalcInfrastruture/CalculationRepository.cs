@@ -11,16 +11,24 @@ public class CalculationRepository : ICalculationRepository
 {
     public Calculation DoCalculation(Calculation calc)
     {
+        
         using (HttpClient client = new HttpClient())
         {
-            client.BaseAddress = new Uri("http://localhost:5000");
+            client.BaseAddress = new Uri($"http://{calc.Operation}:8080");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Sending calculation to server");
-            HttpResponseMessage response = client.PostAsJsonAsync(calc.Operation.ToString(), calc).Result;
+            HttpResponseMessage response = client.GetAsync($"/do{calc.Operation}?a={calc.Numbers[0]}&b={calc.Numbers[1]}").Result;
             if (response.IsSuccessStatusCode)
             {
-                return response.Content.ReadFromJsonAsync<Calculation>().Result;
+                return new Calculation
+                {
+                    UserId = calc.UserId,
+                    Numbers = calc.Numbers,
+                    Operation = calc.Operation,
+                    Result = response.Content.ReadFromJsonAsync<float>().Result,
+                    DateStamp = DateTime.Now
+                };
             }
             else
             {
@@ -29,15 +37,15 @@ public class CalculationRepository : ICalculationRepository
         }
     }
 
-    public List<Calculation> GetCalculations(int id)
+    public List<Calculation> GetCalculations(Guid id)
     {
         using (HttpClient client = new HttpClient())
         {
-            client.BaseAddress = new Uri("http://localhost:5000");
+            client.BaseAddress = new Uri("http://memory:8080");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Getting calculations from server");
-            HttpResponseMessage response = client.GetAsync("getCalculations/" + id).Result;
+            HttpResponseMessage response = client.GetAsync("/getCalculations?UserId=" + id).Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadFromJsonAsync<List<Calculation>>().Result;
@@ -53,11 +61,11 @@ public class CalculationRepository : ICalculationRepository
     {
         using (HttpClient client = new HttpClient())
         {
-            client.BaseAddress = new Uri("http://localhost:5000");
+            client.BaseAddress = new Uri("http://memory:8080");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Saving calculation to server");
-            HttpResponseMessage response = client.PostAsJsonAsync("saveCalculation", calc).Result;
+            HttpResponseMessage response = client.PostAsJsonAsync("/saveCalculation", calc).Result;
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(response.ReasonPhrase);

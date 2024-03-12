@@ -5,6 +5,10 @@
 /// </summary>
 public class Calculation
 {
+    /// <summary>
+    /// Gets or sets the calculation ID.
+    /// </summary>
+    public int CalculationId { get; set; }
 
     public Guid UserId { get; set; }
 

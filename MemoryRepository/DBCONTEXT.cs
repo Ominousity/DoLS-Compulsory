@@ -20,7 +20,7 @@ namespace MemoryRepository
                 .Property(U => U.UserId)
                 .IsRequired();
             modelBuilder.Entity<Calculation>()
-                .HasKey(U => U.UserId);
+                .HasKey(U => U.CalculationId);
         }
     }
 }
