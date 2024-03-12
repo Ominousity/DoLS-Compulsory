@@ -1,0 +1,34 @@
+.outer-display {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: gray;
+}
+
+.textarea {
+  width: 10%;
+}
+
+.main-display {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.keys {
+  width: 100%;
+}
+
+.history-text{
+  resize: none;
+  width: 50%;
+}
