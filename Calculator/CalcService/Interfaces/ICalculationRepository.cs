@@ -17,7 +17,7 @@ public interface ICalculationRepository
     /// </summary>
     /// <param name="id">The ID of the calculations to retrieve.</param>
     /// <returns>A list of calculations.</returns>
-    List<Calculation> GetCalculations(int id);
+    List<Calculation> GetCalculations(Guid id);
 
     /// <summary>
     /// Saves a calculation.

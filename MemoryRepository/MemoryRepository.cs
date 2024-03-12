@@ -15,7 +15,7 @@ namespace MemoryRepository
         private DbContextOptions<DBCONTEXT> _options;
         public MemoryRepository()
         {
-            _options = new DbContextOptionsBuilder<DBCONTEXT>().UseSqlServer("Server=Auth-db;Database=Auth;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;").Options;
+            _options = new DbContextOptionsBuilder<DBCONTEXT>().UseSqlServer("Server=db;Database=memory;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;").Options;
         }
         public List<Calculation> GetCalculations(Guid UserId)
         {

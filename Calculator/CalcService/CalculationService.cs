@@ -15,12 +15,12 @@ public class CalculationService : ICalculationService
 
     public Calculation DoCalculation(Calculation calc)
     {   
-        SaveCalculation(calc);
-
-        return calcRepo.DoCalculation(calc);
+        Calculation temp = calcRepo.DoCalculation(calc);
+        SaveCalculation(temp);
+        return temp;
     }
 
-    public List<Calculation> GetCalculations(int id)
+    public List<Calculation> GetCalculations(Guid id)
     {
         return calcRepo.GetCalculations(id);
     }

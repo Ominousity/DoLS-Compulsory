@@ -27,7 +27,7 @@ public class CalculatorGateway : ControllerBase
             span.SetAttribute("Operation", calc.Operation.ToString());
             try
             {
-                Log.Logger.Information($"Calculation requested {calc.Operation.ToString()}");
+                Log.Logger.Information($"Calculation requested {calc.Operation}");
                 return Ok(calcService.DoCalculation(calc));
             }
             catch (Exception e)
@@ -42,12 +42,12 @@ public class CalculatorGateway : ControllerBase
     [Route("api/getCalculations")]
     [ProducesResponseType(typeof(List<Calculation>), 200)]
     [ProducesResponseType(400)]
-    public ActionResult<List<Calculation>> GetCalculations(int id)
+    public ActionResult<List<Calculation>> GetCalculations(Guid id)
     {
         var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Calculator-API");
         using (var span = tracer.StartActiveSpan("GetCalculations"))
         {
-            span.SetAttribute("ID", id);
+            span.SetAttribute("ID", id.ToString());
             try
             {
                 Log.Logger.Information($"Calculations requested for {id}");

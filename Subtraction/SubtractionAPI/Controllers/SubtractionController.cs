@@ -7,7 +7,7 @@ namespace SubtractionAPI;
 [ApiController]
 public class SubtractionController : ControllerBase
 {
-    [HttpPost]
+    [HttpGet]
     [Route("doSubtraction")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
