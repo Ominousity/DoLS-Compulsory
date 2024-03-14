@@ -9,26 +9,18 @@ namespace CalcInfrastruture;
 
 public class CalculationRepository : ICalculationRepository
 {
-    public Calculation DoCalculation(Calculation calc)
+    public async Task<float> DoCalculation(Operator @operator, float num1, float num2)
     {
-        
         using (HttpClient client = new HttpClient())
         {
-            client.BaseAddress = new Uri($"http://{calc.Operation}:8080");
+            client.BaseAddress = new Uri($"http://{@operator}:8080");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Sending calculation to server");
-            HttpResponseMessage response = client.GetAsync($"/do{calc.Operation}?a={calc.Numbers[0]}&b={calc.Numbers[1]}").Result;
+            HttpResponseMessage response = client.GetAsync($"/do{@operator}?a={num1}&b={num2}").Result;
             if (response.IsSuccessStatusCode)
             {
-                return new Calculation
-                {
-                    UserId = calc.UserId,
-                    Numbers = calc.Numbers,
-                    Operation = calc.Operation,
-                    Result = response.Content.ReadFromJsonAsync<float>().Result,
-                    DateStamp = DateTime.Now
-                };
+                return await response.Content.ReadFromJsonAsync<float>();
             }
             else
             {

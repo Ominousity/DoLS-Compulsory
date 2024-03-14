@@ -19,7 +19,7 @@ public class CalculatorGateway : ControllerBase
     [Route("api/doCalculation")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
-    public ActionResult<Calculation> Get(Calculation calc)
+    public async Task<ActionResult<Calculation>> GetAsync(Calculation calc)
     {
         var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Calculator-API");
         using (var span = tracer.StartActiveSpan("DoCalculation"))
@@ -28,7 +28,7 @@ public class CalculatorGateway : ControllerBase
             try
             {
                 Log.Logger.Information($"Calculation requested {calc.Operation}");
-                return Ok(calcService.DoCalculation(calc));
+                return Ok(await calcService.DoCalculationAsync(calc));
             }
             catch (Exception e)
             {

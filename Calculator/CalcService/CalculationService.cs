@@ -8,17 +8,17 @@ public class CalculationService : ICalculationService
 {
     private readonly ICalculationRepository calcRepo;
 
-
     public CalculationService(ICalculationRepository _calcRepo)
     {
         calcRepo = _calcRepo;
     }
 
-    public Calculation DoCalculation(Calculation calc)
+    public async Task<Calculation> DoCalculationAsync(Calculation calc)
     {
-        Calculation finishedCalculation = SplitEquation(calc);
-        SaveCalculation(finishedCalculation);
-        return finishedCalculation;
+        calc.DateStamp = DateTime.Now;
+        calc.Result = await EvaluateExpressionAsync(calc.Equation);
+        SaveCalculation(calc);
+        return calc;
     }
 
     public List<Calculation> GetCalculations(Guid id)
@@ -31,63 +31,109 @@ public class CalculationService : ICalculationService
         calcRepo.SaveCalculation(calc);
     }
 
-    private Calculation CallOperators(Calculation calc)
+    private async Task<float> CallOperatorsAsync(Operator @operator, float num1, float num2)
     {
-        return calcRepo.DoCalculation(calc);
+        return await calcRepo.DoCalculation(@operator, num1, num2);
     }
 
-    private Calculation SplitEquation(Calculation calc)
+    private async Task<float> EvaluateExpressionAsync(string expression)
     {
-        string pattern = @"(\d+)\s*([+\-*/])\s*(\d+)";
-        Regex regex = new Regex(pattern);
-        MatchCollection matches = regex.Matches(calc.Equation);
-
-        Stack<float> numbers = new Stack<float>();
-        Stack<string> operations = new Stack<string>();
-
-        foreach (Match match in matches)
+        for (int i = 0; i < expression.Length - 1; i++)
         {
-            float number1 = numbers.Pop();
-            float number2 = float.Parse(match.Groups[1].Value);
-            string operation = match.Groups[2].Value;
-
-            if (operation == "*" || operation == "/")
+            if ((char.IsDigit(expression[i]) || expression[i] == ')') && expression[i + 1] == '(')
             {
-                float? result = operation == "*"
-                    ? CallOperators(new Calculation { Numbers = new List<float> { number1, number2 }, Operation = Operator.Multiplication }).Result
-                    : CallOperators(new Calculation { Numbers = new List<float> { number1, number2 }, Operation = Operator.Division }).Result;
-                numbers.Push(result.Value);
-            }
-            else
-            {
-                operations.Push(operation);
-                numbers.Push(number1);
-                numbers.Push(number2);
+                expression = expression.Insert(i + 1, "*");
             }
         }
 
-        while (operations.Count > 0)
-        {
-            float number2 = numbers.Pop();
-            float number1 = numbers.Pop();
-            string operation = operations.Pop();
+        expression = expression.Replace(" ", ""); // Remove spaces for simplicity
+        Stack<float> operands = new Stack<float>();
+        Stack<char> operators = new Stack<char>();
 
-            float? result = operation == "+"
-                ? CallOperators(new Calculation { Numbers = new List<float> { number1, number2 }, Operation = Operator.Addition }).Result
-                : CallOperators(new Calculation { Numbers = new List<float> { number1, number2 }, Operation = Operator.Subtraction }).Result;
-            numbers.Push(result.Value);
+        for (int i = 0; i < expression.Length; i++)
+        {
+            char currentChar = expression[i];
+            if (char.IsDigit(currentChar))
+            {
+                string operand = currentChar.ToString();
+                while (i + 1 < expression.Length && (char.IsDigit(expression[i + 1]) || expression[i + 1] == '.'))
+                {
+                    operand += expression[i + 1];
+                    i++;
+                }
+                operands.Push(float.Parse(operand));
+            }
+            else if (currentChar == '(')
+            {
+                operators.Push(currentChar);
+            }
+            else if (currentChar == ')')
+            {
+                while (operators.Peek() != '(')
+                {
+                    await ProcessOperatorAsync(operands, operators);
+                }
+                operators.Pop(); // Discard the opening parenthesis
+            }
+            else if (IsOperator(currentChar))
+            {
+                while (operators.Count > 0 && Precedence(operators.Peek()) >= Precedence(currentChar))
+                {
+                    await ProcessOperatorAsync(operands, operators);
+                }
+                operators.Push(currentChar);
+            }
         }
 
-        float finalResult = numbers.Pop();
-
-        Calculation finishedCalculation = new Calculation
+        while (operators.Count > 0)
         {
-            UserId = calc.UserId,
-            Equation = calc.Equation,
-            Operation = calc.Operation,
-            Result = finalResult,
-            DateStamp = DateTime.Now
-        };
-        return finishedCalculation;
+            await ProcessOperatorAsync(operands, operators);
+        }
+
+        return operands.Pop();
+    }
+
+    private async Task ProcessOperatorAsync(Stack<float> operands, Stack<char> operators)
+    {
+        float operand2 = operands.Pop();
+        float operand1 = operands.Pop();
+        char operation = operators.Pop();
+
+        float result = await PerformOperationAsync(operand1, operand2, operation);
+        operands.Push(result);
+    }
+
+    private async Task<float> PerformOperationAsync(float operand1, float operand2, char operation)
+    {
+        switch (operation)
+        {
+            case '+':
+                return await CallOperatorsAsync(Operator.Addition, operand1, operand2);
+            case '-':
+                return await CallOperatorsAsync(Operator.Subtraction, operand1, operand2);
+            case '*':
+                return await CallOperatorsAsync(Operator.Multiplication, operand1, operand2);
+            case '/':
+                if (operand2 == 0)
+                    throw new DivideByZeroException("Cannot divide by zero.");
+                return await CallOperatorsAsync(Operator.Division, operand1, operand2);
+            default:
+                throw new ArgumentException("Invalid operation.");
+        }
+    }
+
+    private bool IsOperator(char c)
+    {
+        return c == '+' || c == '-' || c == '*' || c == '/';
+    }
+
+    private int Precedence(char op)
+    {
+        if (op == '+' || op == '-')
+            return 1;
+        else if (op == '*' || op == '/')
+            return 2;
+        else
+            return 0; // Parentheses have the highest precedence
     }
 }
