@@ -12,6 +12,12 @@ services:
       ACCEPT_EULA: "Y"
     restart: unless-stopped
 
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    restart: unless-stopped
+
   db:
     image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
