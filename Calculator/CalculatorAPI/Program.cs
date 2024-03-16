@@ -39,6 +39,16 @@ builder.Host.UseSerilog();
 builder.Services.AddScoped<ICalculationService, CalculationService>();
 builder.Services.AddScoped<ICalculationRepository, CalculationRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -56,6 +66,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseSerilogRequestLogging();
+
+app.UseCors("AllowAnyOrigin");
 
 app.MapControllers();
 
