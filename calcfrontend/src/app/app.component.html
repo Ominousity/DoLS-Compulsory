@@ -1,0 +1,33 @@
+<div class="outer-display">
+    <input class="textarea" [value]="calculateString" readonly>
+<div class="main-display">
+    <div class="keypad">
+      <button class="keys" (click)="addToList('+')">+</button>
+      <button class="keys" (click)="addToList('-')">-</button>
+      <button class="keys" (click)="addToList('/')">/</button>
+      <button class="keys" (click)="addToList('*')">*</button>
+      <button class="keys" (click)="addToList('(')">(</button>
+      <button class="keys" (click)="addToList(')')">)</button>
+      <button class="keys" (click)="addToList('1')">1</button>
+      <button class="keys" (click)="addToList('2')">2</button>
+      <button class="keys" (click)="addToList('3')">3</button>
+      <button class="keys" (click)="addToList('4')">4</button>
+      <button class="keys" (click)="addToList('5')">5</button>
+      <button class="keys" (click)="addToList('6')">6</button>
+      <button class="keys" (click)="addToList('7')">7</button>
+      <button class="keys" (click)="addToList('8')">8</button>
+      <button class="keys" (click)="addToList('9')">9</button>
+      <button class="keys" (click)="addToList('0')">0</button>
+      <button class="keys" (click)="clearList()">clear</button>
+      <button class="keys" (click)="doCalculate()">=</button>
+    </div>
+  </div>
+  <ul *ngFor="let item of data$ | async">
+    <li>
+      Equation: {{item.equation}}
+    </li>
+    <li>
+      Result: {{item.result}}
+    </li>
+  </ul>
+</div>
