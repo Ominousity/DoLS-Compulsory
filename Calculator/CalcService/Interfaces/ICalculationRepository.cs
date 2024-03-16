@@ -10,7 +10,7 @@ public interface ICalculationRepository
     /// <summary>
     /// <param name="calc">The calculation to be performed.</param>
     /// <returns>The result of the calculation.</returns>
-    Calculation DoCalculation(Calculation calc);
+    Task<float> DoCalculation(Operator @operator, float num1, float num2);
 
     /// <summary>
     /// Retrieves a list of calculations for a given ID.
