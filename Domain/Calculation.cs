@@ -10,12 +10,19 @@ public class Calculation
     /// </summary>
     public int CalculationId { get; set; }
 
+    /// <summary>
+    /// Gets or sets the unique identifier of the user.
+    /// </summary>
     public Guid UserId { get; set; }
 
     /// <summary>
-    /// Gets or sets the list of numbers used in the calculation.
+    /// Gets or sets the equation used for the calculation.
     /// </summary>
+    public string? Equation { get; set; }
 
+    /// <summary>
+    /// Gets or sets the list of numbers.
+    /// </summary>
     public List<float>? Numbers { get; set; }
 
     /// <summary>
