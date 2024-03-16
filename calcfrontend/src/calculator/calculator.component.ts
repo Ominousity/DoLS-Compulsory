@@ -12,3 +12,4 @@ export class CalculatorComponent {
 
   id = uuidv4()
 }
+
