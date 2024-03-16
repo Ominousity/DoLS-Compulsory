@@ -13,11 +13,11 @@ export class Httpservice{
   }
 
   doCalculate(_list: numbers){
-  return this.http.post(this.baseURL, _list);
+    return this.http.post(this.baseURL, _list)
   }
 
   getCalculations(id: string){
-  return this.http.get(this.baseURL + '?id=' + id);
+    return this.http.get(this.baseURL + '?id=' + id)
 
   }
 }
