@@ -22,5 +22,12 @@
       <button class="keys" (click)="doCalculate()">=</button>
     </div>
   </div>
-  <textarea class="history-text" readonly></textarea>
+  <ul *ngFor="let item of data$ | async">
+    <li>
+      Equation: {{item.equation}}
+    </li>
+    <li>
+      Result: {{item.result}}
+    </li>
+  </ul>
 </div>

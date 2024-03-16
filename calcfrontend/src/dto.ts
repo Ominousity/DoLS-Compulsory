@@ -11,3 +11,9 @@ export interface CalculatedNumbers{
   result: number;
   dateStamp: Date;
 }
+
+export interface NumbersToBeCalculated{
+  userId: string;
+  equation: string;
+  operation: number;
+}
