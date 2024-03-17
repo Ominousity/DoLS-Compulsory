@@ -17,11 +17,11 @@ public interface ICalculationRepository
     /// </summary>
     /// <param name="id">The ID of the calculations to retrieve.</param>
     /// <returns>A list of calculations.</returns>
-    List<Calculation> GetCalculations(Guid id);
+    Task<List<Calculation>> GetCalculations(Guid id);
 
     /// <summary>
     /// Saves a calculation.
     /// </summary>
     /// <param name="calc">The calculation to be saved.</param>
-    void SaveCalculation(Calculation calc);
+    Task SaveCalculation(Calculation calc);
 }

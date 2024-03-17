@@ -8,7 +8,7 @@ namespace Division_API.Controllers
     {
         [HttpGet]
         [Route("doDivision")]
-        public IActionResult Division(float a, float b)
+        public async Task<IActionResult> Division(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Division-API");
             using (var span = tracer.StartActiveSpan("Division"))

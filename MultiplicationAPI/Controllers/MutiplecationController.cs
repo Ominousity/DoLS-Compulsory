@@ -8,7 +8,7 @@ namespace MutiplecationAPI.Controllers
     {
         [HttpGet]
         [Route("doMultiplication")]
-        public IActionResult Mutiply(float a, float b)
+        public async Task<IActionResult> Mutiply(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Multiplication-API");
             using (var span = tracer.StartActiveSpan("Multiplication"))

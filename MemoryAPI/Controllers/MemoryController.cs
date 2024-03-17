@@ -16,7 +16,7 @@ namespace MemoryAPI.Controllers
 
         [HttpGet]
         [Route("GetCalculations")]
-        public IActionResult GetCalculations(Guid UserId)
+        public async Task<IActionResult> GetCalculations(Guid UserId)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
             using (var span = tracer.StartActiveSpan("GetCalculations"))
@@ -25,7 +25,7 @@ namespace MemoryAPI.Controllers
                 try
                 {
                     Log.Logger.Information($"Request for getting calculations from user : {UserId}");
-                    List<Calculation> calculations = _memoryRepository.GetCalculations(UserId);
+                    List<Calculation> calculations = await _memoryRepository.GetCalculations(UserId);
                     return Ok(calculations);
                 }
                 catch (Exception ex)
@@ -38,7 +38,7 @@ namespace MemoryAPI.Controllers
 
         [HttpPost]
         [Route("SaveCalculation")]
-        public IActionResult SaveCalculation(Calculation calculation)
+        public async Task<IActionResult> SaveCalculation(Calculation calculation)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
             using (var span = tracer.StartActiveSpan("SaveCalculation"))
@@ -47,7 +47,7 @@ namespace MemoryAPI.Controllers
                 try
                 {
                     Log.Logger.Information($"Requst for saving a new calculation");
-                    _memoryRepository.SaveCalculation(calculation);
+                    await _memoryRepository.SaveCalculation(calculation);
                     return Ok();
                 }
                 catch (Exception ex)
@@ -60,7 +60,7 @@ namespace MemoryAPI.Controllers
 
         [HttpPost]
         [Route("Rebuild")]
-        public IActionResult Rebuild()
+        public async Task<IActionResult> Rebuild()
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Memory-API");
             using (var span = tracer.StartActiveSpan("Rebuild"))
@@ -68,7 +68,7 @@ namespace MemoryAPI.Controllers
                 try
                 {
                     Log.Logger.Information($"Requst for rebuilding the database");
-                    _memoryRepository.Rebuild();
+                    await _memoryRepository.RebuildAsync();
                     return Ok();
                 }
                 catch (Exception ex)

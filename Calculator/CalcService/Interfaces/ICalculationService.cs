@@ -14,5 +14,5 @@ public interface ICalculationService
     /// </summary>
     /// <param name="id">The ID of the calculations to retrieve.</param>
     /// <returns>A list of calculations.</returns>d
-    List<Calculation> GetCalculations(Guid id);
+    Task<List<Calculation>> GetCalculations(Guid id);
 }
