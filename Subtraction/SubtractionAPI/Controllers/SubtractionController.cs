@@ -11,7 +11,7 @@ public class SubtractionController : ControllerBase
     [Route("doSubtraction")]
     [ProducesResponseType(typeof(Calculation), 200)]
     [ProducesResponseType(400)]
-    public IActionResult Subtraction(float a, float b)
+    public async Task<IActionResult> Subtraction(float a, float b)
     {
         var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Subtraction-API");
         using (var span = tracer.StartActiveSpan("Subtraction"))

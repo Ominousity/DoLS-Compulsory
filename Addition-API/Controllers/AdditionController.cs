@@ -8,7 +8,7 @@ namespace Addition_API.Controllers
     {   
         [HttpGet]
         [Route("doAddition")]
-        public IActionResult Addition(float a, float b)
+        public async Task<IActionResult> Addition(float a, float b)
         {
             var tracer = OpenTelemetry.Trace.TracerProvider.Default.GetTracer("Addition-API");
             using (var span = tracer.StartActiveSpan("Addition"))

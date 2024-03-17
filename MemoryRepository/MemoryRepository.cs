@@ -17,31 +17,32 @@ namespace MemoryRepository
         {
             _options = new DbContextOptionsBuilder<DBCONTEXT>().UseSqlServer("Server=db;Database=memory;User Id=sa;Password=SuperSecret7!;Trusted_Connection=False;TrustServerCertificate=True;").Options;
         }
-        public List<Calculation> GetCalculations(Guid UserId)
+        public async Task<List<Calculation>> GetCalculations(Guid UserId)
         {
             Log.Logger.Information($"Getting calculations from Database for user : {UserId}");
             using (var context = new DBCONTEXT(_options, Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient))
             {
-                return context.calculations.Where(c => c.UserId == UserId).ToList();
+                Task<List<Calculation>> calculations = context.calculations.Where(c => c.UserId == UserId).ToListAsync();
+                return await calculations;
             }
         }
 
-        public void SaveCalculation(Calculation calculation)
+        public async Task SaveCalculation(Calculation calculation)
         {
             Log.Logger.Information($"Saving calculation to Database for user {calculation.UserId}");
             using (var context = new DBCONTEXT(_options, Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient))
             {
-                _ = context.Add(calculation);
+                _ = await context.AddAsync(calculation);
                 context.SaveChanges();
             }
         }
 
-        public void Rebuild()
+        public async Task RebuildAsync()
         {
             using (var context = new DBCONTEXT(_options, Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient))
             {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                await context.Database.EnsureDeletedAsync();
+                await context.Database.EnsureCreatedAsync();
             }
         }
     }

@@ -17,18 +17,18 @@ public class CalculationService : ICalculationService
     {
         calc.DateStamp = DateTime.Now;
         calc.Result = await EvaluateExpressionAsync(calc.Equation);
-        SaveCalculation(calc);
+        await SaveCalculation(calc);
         return calc;
     }
 
-    public List<Calculation> GetCalculations(Guid id)
+    public async Task<List<Calculation>> GetCalculations(Guid id)
     {
-        return calcRepo.GetCalculations(id);
+        return await calcRepo.GetCalculations(id);
     }
 
-    private void SaveCalculation(Calculation calc)
+    private async Task SaveCalculation(Calculation calc)
     {
-        calcRepo.SaveCalculation(calc);
+        await calcRepo.SaveCalculation(calc);
     }
 
     private async Task<float> CallOperatorsAsync(Operator @operator, float num1, float num2)

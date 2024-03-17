@@ -9,8 +9,8 @@ namespace MemoryRepository
 {
     public interface IMemoryRepository
     {
-        public List<Calculation> GetCalculations(Guid UserId);
-        public void SaveCalculation(Calculation calculation);
-        public void Rebuild();
+        public Task<List<Calculation>> GetCalculations(Guid UserId);
+        public Task SaveCalculation(Calculation calculation);
+        public Task RebuildAsync();
     }
 }

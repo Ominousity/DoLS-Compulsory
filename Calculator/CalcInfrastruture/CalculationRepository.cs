@@ -29,7 +29,7 @@ public class CalculationRepository : ICalculationRepository
         }
     }
 
-    public List<Calculation> GetCalculations(Guid id)
+    public async Task<List<Calculation>> GetCalculations(Guid id)
     {
         using (HttpClient client = new HttpClient())
         {
@@ -37,7 +37,7 @@ public class CalculationRepository : ICalculationRepository
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Getting calculations from server");
-            HttpResponseMessage response = client.GetAsync("/getCalculations?UserId=" + id).Result;
+            HttpResponseMessage response = await client.GetAsync("/getCalculations?UserId=" + id);
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadFromJsonAsync<List<Calculation>>().Result;
@@ -49,7 +49,7 @@ public class CalculationRepository : ICalculationRepository
         }
     }
 
-    public void SaveCalculation(Calculation calc)
+    public async Task SaveCalculation(Calculation calc)
     {
         using (HttpClient client = new HttpClient())
         {
@@ -57,7 +57,7 @@ public class CalculationRepository : ICalculationRepository
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             Log.Logger.Information("Saving calculation to server");
-            HttpResponseMessage response = client.PostAsJsonAsync("/saveCalculation", calc).Result;
+            HttpResponseMessage response = await client.PostAsJsonAsync("/saveCalculation", calc);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(response.ReasonPhrase);
